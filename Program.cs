@@ -6,24 +6,31 @@ namespace EventsAndDelegates
     {
         public delegate double OperacaoMatematicaBinaria(double x, double y);
 
+        public delegate void OcorrenciaDeOperacao(double resultado);
+
+        public static event OcorrenciaDeOperacao AoOcorrerOperacao;
+
         public static double Somar(double x, double y)
         {
             double r = x + y;
-            Console.WriteLine($"A soma de {x} e {y} é igual a {r}.");
+            //Console.WriteLine($"A soma de {x} e {y} é igual a {r}.");
+            AoOcorrerOperacao.Invoke(r);
             return r;
         }
 
         public static double Multiplicar(double x, double y)
         {
             double r = x * y;
-            Console.WriteLine($"A multiplicação de {x} e {y} é igual a {r}.");
+            //Console.WriteLine($"A multiplicação de {x} e {y} é igual a {r}.");
+            AoOcorrerOperacao.Invoke(r);
             return r;
         }
 
         public static double Potenciar(double x, double y)
         {
             double r = Math.Pow(x, y);
-            Console.WriteLine($"A potência de {x} elevado a {y} é igual a {r}.");
+            //Console.WriteLine($"A potência de {x} elevado a {y} é igual a {r}.");
+            AoOcorrerOperacao.Invoke(r);
             return r;
         }
 
@@ -34,30 +41,32 @@ namespace EventsAndDelegates
             //OperacaoMatematicaBinaria op = new OperacaoMatematicaBinaria(Multiplicar);
             //op(20, 10);
 
-            List<OperacaoMatematicaBinaria> operacoes = new List<OperacaoMatematicaBinaria>();
-            operacoes.Add(new OperacaoMatematicaBinaria(Somar));
-            operacoes.Add(new OperacaoMatematicaBinaria(Multiplicar));
-            operacoes.Add(new OperacaoMatematicaBinaria(Potenciar));
+            //List<OperacaoMatematicaBinaria> operacoes = new List<OperacaoMatematicaBinaria>();
+            //operacoes.Add(new OperacaoMatematicaBinaria(Somar));
+            //operacoes.Add(new OperacaoMatematicaBinaria(Multiplicar));
+            //operacoes.Add(new OperacaoMatematicaBinaria(Potenciar));
 
 
             /* Método anônimo não foi declarado previamente */
             /* Método anônimo */
-            operacoes.Add(delegate (double a, double b)
-            {
-                double r = a / b;
-                Console.WriteLine($"A divisão de {a} por {b} é igual a {r}.");
-                return r;
-            });
+            //operacoes.Add(delegate (double a, double b)
+            //{
+            //    double r = a / b;
+            //    Console.WriteLine($"A divisão de {a} por {b} é igual a {r}.");
+            //    return r;
+            //});
 
 
 
-            foreach (var item in operacoes)
-            {
-                item(10, 2);
-                item(20, 3);
-                item(30, 4);
-                Console.WriteLine();
-            }
+            //foreach (var item in operacoes)
+            //{
+            //    item(10, 2);
+            //    item(20, 3);
+            //    item(30, 4);
+            //    Console.WriteLine();
+            //}
+
+            AoOcorrerOperacao += MostrarResultadoNaTela;
 
             OperacaoMatematicaBinaria opMulticast = Somar;
             opMulticast += Multiplicar;
@@ -72,6 +81,14 @@ namespace EventsAndDelegates
             opMulticast(2, 3);
 
         }
+
+
+        public static void MostrarResultadoNaTela(double r)
+        {
+            Console.WriteLine($"Resultado: {r}");
+        }
+
+
     }
 }
 
